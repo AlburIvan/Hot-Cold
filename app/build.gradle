@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.raworkstudio.hotcold"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+        }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            "src/main/res/drawable",
+                            "src/main/res/layout/features",
+                            "src/main/res/layout/features/home",
+                            "src/main/res/layout",
+                            "src/main/res"
+                    ]
+        }
+    }
+}
+
+dependencies {
+
+    // [Kotlin]
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // [Android Library Dependencies]
+    compile "com.android.support:appcompat-v7:$project.supportVersion"
+    compile "com.android.support:design:$project.supportVersion"
+
+    // [Dagger2]
+    compile "com.google.dagger:dagger:$project.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$project.daggerVersion"
+
+    // [RxJava & RxAndroid & RxBindings]
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: "$project.rxJavaVersion"
+    compile group: 'io.reactivex.rxjava2', name: 'rxkotlin', version: "$project.rxKotlinVersion"
+
+    // [Espresso]
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$project.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile "com.android.support.test:runner:$project.runnerVersion"
+    androidTestCompile "com.android.support:support-annotations:$project.supportVersion"
+
+    testCompile 'junit:junit:4.12'
+}
