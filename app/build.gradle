@@ -64,6 +64,9 @@ dependencies {
     // [Lottie]
     compile group: "com.airbnb.android", name: "lottie", version: "$project.lottieVersion"
 
+    // [Dexter]
+    compile 'com.karumi:dexter:4.1.0'
+
     // [Espresso]
     androidTestCompile("com.android.support.test.espresso:espresso-core:$project.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
