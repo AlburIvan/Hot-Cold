@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion project.sdkVersion
+    buildToolsVersion project.buildTools
     defaultConfig {
         applicationId "com.raworkstudio.hotcold"
-        minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion project.minSdk
+        targetSdkVersion project.targetSdk
+        versionCode project.versionCode
+        versionName project.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,10 +31,10 @@ android {
         main {
             res.srcDirs =
                     [
-                            "src/main/res/drawable",
+                            "src/main/res/layout/features/main",
                             "src/main/res/layout/features",
-                            "src/main/res/layout/features/home",
                             "src/main/res/layout",
+                            "src/main/res/drawable",
                             "src/main/res"
                     ]
         }
@@ -43,7 +44,7 @@ android {
 dependencies {
 
     // [Kotlin]
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$project.kotlin_version"
 
     // [Android Library Dependencies]
     compile "com.android.support:appcompat-v7:$project.supportVersion"
@@ -56,6 +57,12 @@ dependencies {
     // [RxJava & RxAndroid & RxBindings]
     compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: "$project.rxJavaVersion"
     compile group: 'io.reactivex.rxjava2', name: 'rxkotlin', version: "$project.rxKotlinVersion"
+
+    // [Kontakt.io]
+    compile group: "com.kontaktio", name: "sdk", version: "$project.kontaktVersion"
+
+    // [Lottie]
+    compile group: "com.airbnb.android", name: "lottie", version: "$project.lottieVersion"
 
     // [Espresso]
     androidTestCompile("com.android.support.test.espresso:espresso-core:$project.espressoVersion", {
