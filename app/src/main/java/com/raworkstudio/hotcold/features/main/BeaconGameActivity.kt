@@ -1,5 +1,6 @@
 package com.raworkstudio.hotcold.features.main
 
+import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,38 +14,99 @@ import android.widget.Button
 import com.raworkstudio.hotcold.R
 
 import kotlinx.android.synthetic.main.content_beacon_game.*
+import android.webkit.PermissionRequest
+import android.Manifest.permission
+import android.Manifest.permission.RECORD_AUDIO
+import android.Manifest.permission.READ_CONTACTS
+import android.util.Log
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.raworkstudio.hotcold.utils.logTag
+import kotlinx.android.synthetic.main.activity_beacon_game.*
+import android.widget.Toast
+import java.lang.Compiler.enable
+import android.bluetooth.BluetoothAdapter
+import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+import android.content.Intent
+import android.provider.Settings
+
 
 class BeaconGameActivity : AppCompatActivity(), BeaconGameContract.View {
 
-
     private lateinit var presenter: BeaconGamePresenter
-
+    private val activity = this
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_beacon_game)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        presenter = BeaconGamePresenter(this)
+        Dexter.withActivity(activity)
+                .withPermissions(
+                        Manifest.permission.BLUETOOTH,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ).withListener(object : MultiplePermissionsListener {
+            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                if (report.areAllPermissionsGranted()) {
+                    Log.d(logTag(), "Permissions granted!")
+                    presenter = BeaconGamePresenter(activity)
+                }
+            }
+
+            override fun onPermissionRationaleShouldBeShown(p0: MutableList<com.karumi.dexter.listener.PermissionRequest>?, p1: PermissionToken?) {
+                /* ... */
+            }
+        }).check()
 
 
+        beacon_game_start_button.isEnabled = false
         beacon_game_switch.setOnCheckedChangeListener { buttonView, isChecked ->
             when(isChecked){
-                true -> beacon_game_start_button.isEnabled = true
-                false -> beacon_game_start_button.isEnabled = false
+                true -> turnOnHardware()
+                false -> turnOffHardware()
             }
         }
 
         beacon_game_start_button.setOnClickListener { v: View ->
-            Snackbar.make(v, "Button clicked!", Snackbar.LENGTH_SHORT)
-                    .show()
+            presenter.start()
         }
-
     }
 
+
+
+    private fun turnOnHardware(): Unit {
+        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (!mBluetoothAdapter.isEnabled) {
+            mBluetoothAdapter.enable()
+        } else {
+            Toast.makeText(applicationContext, "Bluetooth Already Enabled", Toast.LENGTH_LONG).show()
+        }
+
+        startActivity( Intent(
+                Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
+        beacon_game_start_button.isEnabled = true
+        beacon_game_start_button.setBackgroundColor( resources.getColor(android.R.color.holo_blue_light))
+    }
+
+    private fun turnOffHardware() {
+        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (mBluetoothAdapter.isEnabled) {
+            mBluetoothAdapter.disable()
+        }
+
+        startActivity( Intent(
+                Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
+        beacon_game_start_button.isEnabled = false
+        beacon_game_start_button.setBackgroundColor( resources.getColor(android.R.color.darker_gray))
+    }
 
 
     override fun onStart() {
@@ -54,12 +116,11 @@ class BeaconGameActivity : AppCompatActivity(), BeaconGameContract.View {
 
 
     override fun onStop() {
-        presenter.onStop()
         super.onStop()
     }
 
     override fun onDestroy() {
-        presenter.onDestroy()
+        presenter?.onDestroy()
         super.onDestroy()
     }
 
@@ -72,7 +133,7 @@ class BeaconGameActivity : AppCompatActivity(), BeaconGameContract.View {
     }
 
     override fun showMessage(reason: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(applicationContext, reason, Toast.LENGTH_LONG).show()
     }
 
     override fun getActivity(): Activity = this

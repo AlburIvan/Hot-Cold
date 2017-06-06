@@ -28,5 +28,7 @@ interface BeaconGameContract {
         fun onStop()
 
         fun onDestroy()
+
+        fun start()
     }
 }
