@@ -9,9 +9,57 @@
     tools:context="com.raworkstudio.hotcold.features.main.BeaconGameActivity"
     tools:showIn="@layout/activity_beacon_game">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/beacon_game_bluetooth_control_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-    />
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="26dp"
+            android:text="Turn on bluetooth"
+            android:gravity="center|left" />
+
+        <Switch
+            android:id="@+id/beacon_game_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#2B4970"
+            android:gravity="center|right"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/beacon_game_start_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/beacon_game_bluetooth_control_container"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Start Game"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_dark"
+        android:enabled="false"
+        style="?borderlessButtonStyle" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_below="@+id/beacon_game_start_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        app:lottie_fileName="mail-sent.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+
 </RelativeLayout>
