@@ -39,8 +39,7 @@ class BeaconGamePresenter(val view: BeaconGameContract.View) : BeaconGameContrac
     private val ttobj: TextToSpeech
 
     init {
-//        KontaktSDK.initialize(Resources.getSystem().getString(R.string.Kontakt_api_key))
-        KontaktSDK.initialize("tsfluEZrkAKloRLtWMqnecMoXWmkRqjS")
+        KontaktSDK.initialize(Resources.getSystem().getString(R.string.Kontakt_api_key))
 
         ttobj = TextToSpeech(view.getActivity(), TextToSpeech.OnInitListener { status ->
             Log.d(BeaconGameActivity::class.java.simpleName,
